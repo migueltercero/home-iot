@@ -1,6 +1,6 @@
 #include "Controller.h"
 #include "Light/LightController.h"
-//#include "Light/LightTimerController.h"
+#include "Light/LightTimerController.h"
 
 using namespace std;
 
@@ -24,7 +24,7 @@ Controller* ControllerFactory::createController(const String& id, const char* co
       return new LightController(id, atoi(cfg[1].c_str()), atoi(cfg[2].c_str()));
     }
     if(controller.compare("light-timer") == 0){
-      //return new LightController(id.c_str(), atoi(cfg[2].c_str()), atoi(cfg[3].c_str()),);
+      return new LightTimerController(id, atoi(cfg[1].c_str()), atoi(cfg[2].c_str()), atoi(cfg[3].c_str()));
     }
   }
 }
