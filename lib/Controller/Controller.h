@@ -5,6 +5,8 @@
 #include "Light.h"
 #include "LightNode.h"
 #include "TimedAction.h"
+#include "Shutters.h"
+#include "RollerShutterNode.h"
 #include <vector>
 #include <string>
 

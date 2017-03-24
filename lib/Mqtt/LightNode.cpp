@@ -1,5 +1,8 @@
 #include "LightNode.h"
 
+LightNode::LightNode(const String& id): HomieNode(id.c_str(), "Light"){
+  this->advertise(NODE_STATUS).settable();
+}
 const char* LightNode::getStatus(enum Status status)
 {
   switch (status)
@@ -18,10 +21,6 @@ bool LightNode::handleInput(const String& property, const HomieRange& range, con
       this->_callbackFunction(false);
     }
   }
-}
-
-LightNode::LightNode(const String& id): HomieNode(id.c_str(), NODE_DESCRIPTION){
-  this->advertise(NODE_STATUS).settable();
 }
 
 void LightNode::attachStatus(callbackStatus function){

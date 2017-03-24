@@ -1,5 +1,15 @@
 #include "LightController.h"
 
+LightController::LightController(const String& id, int buttonPin, int lightPin) : Controller(id)
+{
+  light = new Light(lightPin);
+  mqtt = new LightNode(name);
+  button = new OneButton(buttonPin, true);
+
+  button->attachClick(bind(&LightController::buttonClickHandler, this));
+  mqtt->attachStatus(bind(&LightController::mqttStatusHandler, this, _1));
+}
+
 void LightController::buttonClickHandler(){
   if(light->isActive()){
     off();
@@ -24,16 +34,6 @@ void LightController::off(){
 void LightController::on(){
   light->on();
   mqtt->setStatus(true);
-}
-
-LightController::LightController(const String& id, int buttonPin, int lightPin) : Controller(id)
-{
-  light = new Light(lightPin);
-  mqtt = new LightNode(name);
-  button = new OneButton(buttonPin, true);
-
-  button->attachClick(bind(&LightController::buttonClickHandler, this));
-  mqtt->attachStatus(bind(&LightController::mqttStatusHandler, this, _1));
 }
 
 void LightController::loop(){

@@ -1,8 +1,7 @@
 #include "Controller.h"
 #include "Light/LightController.h"
 #include "Light/LightTimerController.h"
-
-using namespace std;
+#include "RollerShutter/RollerShutterController.h"
 
 ControllerFactory::ControllerFactory() {
 }
@@ -25,6 +24,9 @@ Controller* ControllerFactory::createController(const String& id, const char* co
     }
     if(controller.compare("light-timer") == 0){
       return new LightTimerController(id, atoi(cfg[1].c_str()), atoi(cfg[2].c_str()), atoi(cfg[3].c_str()));
+    }
+    if(controller.compare("rollershutter") == 0){
+      return new RollerShutterController(id, atoi(cfg[1].c_str()), atoi(cfg[2].c_str()), atoi(cfg[3].c_str()), atoi(cfg[4].c_str()), atoi(cfg[5].c_str()));
     }
   }
 }

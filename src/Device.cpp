@@ -2,7 +2,7 @@
 #include "Controller.h"
 
 #define FW_NAME "home-iot"
-#define FW_VERSION "1.1.0"
+#define FW_VERSION "1.2.3"
 
 #define GPIO_LED 16
 
@@ -63,7 +63,8 @@ void setup() {
   // homie setup
   Homie.setLedPin(GPIO_LED, HIGH);
   Homie_setFirmware(FW_NAME, FW_VERSION);
-  Homie.disableLogging();
+  Homie.setResetTrigger(0, LOW, 500);
+  //Homie.disableLogging();
   //Homie.setSetupFunction(setupHandler);
   Homie.setLoopFunction(loopHandler);
   Homie.setup();

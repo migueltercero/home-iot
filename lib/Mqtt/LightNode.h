@@ -4,8 +4,6 @@
 #include <Homie.h>
 
 
-#define NODE "light"
-#define NODE_DESCRIPTION "light"
 #define NODE_STATUS "status"
 
 extern "C" {
