@@ -2,7 +2,7 @@
 #include "Controller.h"
 
 #define FW_NAME "home-iot"
-#define FW_VERSION "1.2.3"
+#define FW_VERSION "1.2.5"
 
 #define GPIO_LED 16
 
@@ -20,7 +20,7 @@ HomieSetting<const char*> controller1("controller1", "Controller");
 HomieSetting<const char*> controller2("controller2", "Controller");
 HomieSetting<const char*> controller3("controller3", "Controller");
 
-void setupHandler() {
+void preSetupHandler() {
   SPIFFS.begin();
   if (SPIFFS.exists("/homie/config.json")) {
       File configFile = SPIFFS.open("/homie/config.json", "r");
@@ -34,10 +34,9 @@ void setupHandler() {
       JsonObject& parsedJson = jsonBuffer.parseObject(buf);
 
       for(int i=0;i<atoi(parsedJson["settings"]["controllerCount"]);i++){
-        String id = String("controller"+ String(i));
-        Serial.println("config");
-        Serial.println(id);
-        controllers[i] = factory->createController(id, parsedJson["settings"][id.c_str()]);
+        String conf = String("controller"+ String(i));
+        String id = String(i+1);
+        controllers[i] = factory->createController(id, parsedJson["settings"][conf.c_str()]);
       }
   }
 }
@@ -58,14 +57,13 @@ void setup() {
   controller2.setDefaultValue("none");
   controller3.setDefaultValue("none");
 
-  setupHandler();
+  preSetupHandler();
 
   // homie setup
   Homie.setLedPin(GPIO_LED, HIGH);
   Homie_setFirmware(FW_NAME, FW_VERSION);
   Homie.setResetTrigger(0, LOW, 500);
   //Homie.disableLogging();
-  //Homie.setSetupFunction(setupHandler);
   Homie.setLoopFunction(loopHandler);
   Homie.setup();
 }
