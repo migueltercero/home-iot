@@ -95,11 +95,7 @@ void Shutters::eraseSavedState() {
   #endif
 }
 
-void Shutters::reset(){
-  Serial.print("reset ");
-  saveCurrentLevelAndKnown(100);
-  this->_currentLevel = 100;
-}
+
 
 bool Shutters::begin() {
   if(!savedIsLastLevelKnown()) {
