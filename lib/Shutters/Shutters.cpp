@@ -1,12 +1,10 @@
 #include "Shutters.h"
+#include "Homie.h"
 
 using namespace ShuttersInternal;
 
 void Shutters::log(const char* text) {
-  //#ifdef DEBUG
-  Serial.print("[Shutters] ");
-  Serial.println(text);
-  //#endif
+  Homie.getLogger() << "[Shutters] " << text << endl;
 }
 
 void Shutters::log(String text) {
@@ -24,9 +22,9 @@ void Shutters::output(uint8_t up, uint8_t down){
   }
 
   // asegurarse que ambos reles estan desactivados antes de activar una salida
-  digitalWrite(_upRollerShutterPin, LOW);
-  digitalWrite(_downRollerShutterPin, LOW);
-  delayMicroseconds(100);
+  //digitalWrite(_upRollerShutterPin, LOW);
+  //digitalWrite(_downRollerShutterPin, LOW);
+  //delayMicroseconds(100);
 
   //ouput
   digitalWrite(_upRollerShutterPin, up);
@@ -70,6 +68,7 @@ bool Shutters::savedIsLastLevelKnown() {
 }
 
 void Shutters::saveLastLevelUnknown() {
+  log("Save eprom value " + String(this->_currentLevel));
   unsigned char current_level = savedCurrentLevel();
   EEPROM.write(this->_eepromPosition, current_level);
   EEPROM.commit();
@@ -82,6 +81,7 @@ unsigned char Shutters::savedCurrentLevel() {
 }
 
 void Shutters::saveCurrentLevelAndKnown(unsigned char level) {
+  log("Save eprom value " + String(level));
   EEPROM.write(this->_eepromPosition, level | FLAG_KNOWN);
   #ifdef ESP8266
   EEPROM.commit();
@@ -111,6 +111,7 @@ bool Shutters::begin() {
 }
 
 void Shutters::up() {
+  //this->_statusCallback(String(this->currentLevel()));
   this->_moving = true;
   this->_direction = DIRECTION_UP;
   output(HIGH, LOW);
@@ -118,6 +119,7 @@ void Shutters::up() {
 }
 
 void Shutters::down() {
+  //this->_statusCallback(String(this->currentLevel()));
   this->_moving = true;
   this->_direction = DIRECTION_DOWN;
   output(LOW, HIGH);
@@ -214,9 +216,8 @@ void Shutters::loop() {
         log(String("Reached level " + String(this->_currentLevel)));
 
         // status
-        if (this->_currentLevel % 10 == 0 && this->_currentLevel <= 100){
+        if (this->_currentLevel % STATUS_STEPS == 0 && this->_currentLevel <= 100){
           _statusCallback(String(this->_currentLevel));
-          log(String("Send status " + String(this->_currentLevel)));
         }
 
       }

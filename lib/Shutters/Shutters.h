@@ -13,6 +13,8 @@ namespace ShuttersInternal {
   const int CALIBRATION_LEVELS = 5;
   const int LEVELS = 100;
 
+  const int STATUS_STEPS = 10;
+
   enum Stop : unsigned char { STOP_NONE, STOP_NEW_LEVEL, STOP_HALT };
   enum Direction : bool { DIRECTION_DOWN, DIRECTION_UP };
   const unsigned char REQUEST_NONE = 255; // Request must be between 0 and 100, so np

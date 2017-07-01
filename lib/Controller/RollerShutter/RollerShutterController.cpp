@@ -49,6 +49,7 @@ void RollerShutterController::mqttCommandHandler(String value) {
 // rollershutter handlers
 void RollerShutterController::rollerShutterStatusHandler(String value)
 {
+  Homie.getLogger() << "[RollerShutterController] Send status " << value << endl;
   mqtt->setPosition(value);
 }
 
