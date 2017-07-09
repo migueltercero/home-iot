@@ -2,7 +2,7 @@
 #include "Controller.h"
 
 #define FW_NAME "home-iot"
-#define FW_VERSION "1.2.7"
+#define FW_VERSION "1.2.8"
 
 #define GPIO_LED 16
 
