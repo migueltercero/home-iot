@@ -1,7 +1,9 @@
 #include "RollerShutterController.h"
+#include "TimedAction.h"
 
 #define UP_LEVEL 15
 #define DOWN_LEVEL 115
+
 
 RollerShutterController::RollerShutterController(const String& id, const int upButtonPin, const int downButtonPin, const int upShutterPin, const int downShutterPin, const int seconds) : Controller(id)
 {
@@ -9,6 +11,7 @@ RollerShutterController::RollerShutterController(const String& id, const int upB
   mqtt = new RollerShutterNode(name);
   upButton = new OneButton(upButtonPin, true);
   downButton = new OneButton(downButtonPin, true);
+  timer = new TimedAction(1*60*1000, bind(&RollerShutterController::timerHandler, this));
 
 
   shutter->attachStatus(bind(&RollerShutterController::rollerShutterStatusHandler, this, _1));
@@ -25,8 +28,14 @@ RollerShutterController::RollerShutterController(const String& id, const int upB
   mqtt->attachPosition(bind(&RollerShutterController::mqttPositionHandler, this, _1));
   mqtt->attachCommand(bind(&RollerShutterController::mqttCommandHandler, this, _1));
 
+ 
+
 }
 
+//timer handler
+void RollerShutterController::timerHandler() {
+  updateStatus();
+}
 
 // mqtt events
 void RollerShutterController::mqttPositionHandler(String value) {
@@ -45,12 +54,17 @@ void RollerShutterController::mqttCommandHandler(String value) {
   }
 }
 
+void RollerShutterController::updateStatus() {
+  String value = String(shutter->currentLevel());
+  Homie.getLogger() << "[RollerShutterController] Send status " << value << endl;
+  mqtt->setPosition(value);
+}
+
 
 // rollershutter handlers
 void RollerShutterController::rollerShutterStatusHandler(String value)
 {
-  Homie.getLogger() << "[RollerShutterController] Send status " << value << endl;
-  mqtt->setPosition(value);
+  updateStatus();
 }
 
 // button handlers
@@ -96,4 +110,6 @@ void RollerShutterController::loop() {
   downButton->tick();
 
   shutter->loop();
+
+  timer->check();
 }

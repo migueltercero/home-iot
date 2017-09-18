@@ -12,6 +12,10 @@ class RollerShutterController : public Controller{
     RollerShutterNode *mqtt;
     OneButton *upButton;
     OneButton *downButton;
+    TimedAction *timer;
+
+    // time handlers
+    void timerHandler();
 
     // button handlers
     void upButtonClickHandler();
@@ -26,6 +30,7 @@ class RollerShutterController : public Controller{
     // mqtt handlers
     void mqttPositionHandler(String value);
     void mqttCommandHandler(String value);
+    void updateStatus();
 
   public:
     RollerShutterController(const String& id, const int upButtonPin, const int downButtonPin, const int upShutterPin, const int downShutterPin, const int seconds);

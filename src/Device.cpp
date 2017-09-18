@@ -1,8 +1,9 @@
 #include <Homie.h>
 #include "Controller.h"
+#include "RemoteDebug.h"  
 
 #define FW_NAME "home-iot"
-#define FW_VERSION "1.2.8"
+#define FW_VERSION "1.2.9"
 
 #define GPIO_LED 16
 
@@ -19,6 +20,8 @@ HomieSetting<const char*> controller0("controller0", "Controller");
 HomieSetting<const char*> controller1("controller1", "Controller");
 HomieSetting<const char*> controller2("controller2", "Controller");
 HomieSetting<const char*> controller3("controller3", "Controller");
+
+RemoteDebug logger;
 
 void preSetupHandler() {
   SPIFFS.begin();
@@ -64,6 +67,7 @@ void setup() {
   Homie_setFirmware(FW_NAME, FW_VERSION);
   Homie.setResetTrigger(0, LOW, 500);
   //Homie.disableLogging();
+  //Homie.setLoggingPrinter(logger.);
   Homie.setLoopFunction(loopHandler);
   Homie.setup();
 }
