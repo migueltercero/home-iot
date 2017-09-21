@@ -9,6 +9,7 @@
 #include "RollerShutterNode.h"
 #include <vector>
 #include <string>
+#include <EEPROM.h>
 
 using namespace std;
 

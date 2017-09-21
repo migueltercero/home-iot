@@ -1,9 +1,9 @@
 #include <Homie.h>
 #include "Controller.h"
-#include "RemoteDebug.h"  
+#include "TimedAction.h"  
 
 #define FW_NAME "home-iot"
-#define FW_VERSION "1.2.9"
+#define FW_VERSION "1.3.0"
 
 #define GPIO_LED 16
 
@@ -11,6 +11,8 @@
 const char *__FLAGGED_FW_NAME = "\xbf\x84\xe4\x13\x54" FW_NAME "\x93\x44\x6b\xa7\x75";
 const char *__FLAGGED_FW_VERSION = "\x6a\x3f\x3e\x0e\xe1" FW_VERSION "\xb0\x30\x48\xd4\x1a";
 /* End of magic sequence for Autodetectable Binary Upload */
+
+TimedAction* timer;
 
 Controller* controllers[4];
 ControllerFactory* factory = new ControllerFactory;
@@ -20,8 +22,6 @@ HomieSetting<const char*> controller0("controller0", "Controller");
 HomieSetting<const char*> controller1("controller1", "Controller");
 HomieSetting<const char*> controller2("controller2", "Controller");
 HomieSetting<const char*> controller3("controller3", "Controller");
-
-RemoteDebug logger;
 
 void preSetupHandler() {
   SPIFFS.begin();
@@ -50,8 +50,16 @@ void loopHandler() {
   }
 }
 
+void timerHandler(){
+  Homie.getLogger() << "[Device] reboot " << endl;
+  Homie.reboot();
+}
+
 void setup() {
   Serial.begin(115200);
+
+  // timer
+  timer = new TimedAction(24*60*60*1000, timerHandler);
 
   // default values
   controllerCount.setDefaultValue(0);
@@ -74,4 +82,6 @@ void setup() {
 
 void loop() {
   Homie.loop();
+
+  timer->check();
 }
