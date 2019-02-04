@@ -1,6 +1,6 @@
 #include "LightTimerController.h"
 
-LightTimerController::LightTimerController(const String& id, const int lightPin, const int buttonPin, const int seconds)
+LightTimerController::LightTimerController(const int id, const int lightPin, const int buttonPin, const int seconds)
 : LightController(id, lightPin, buttonPin)
 , timer(seconds*1000, bind(&LightTimerController::timerHandler, this))
 {

@@ -1,31 +1,28 @@
 #include "RollerShutterNode.h"
 
 
-RollerShutterNode::RollerShutterNode(const String& id): HomieNode(id.c_str(), "RollerShutter"){
-  this->advertise(NODE_POSITION).settable();
-  this->advertise(NODE_COMAND).settable();
+RollerShutterNode::RollerShutterNode(const String& id): HomieNode("rollershutter", "RollerShutter", "RollerShutter"){
+  this->advertise(CHANNEL_LEVEL_ID)
+      .setName(CHANNEL_LEVEL_DESCRIPTION)
+      .setDatatype("integer")
+      .setFormat("0:115")
+      .settable();
+
 }
 
-void RollerShutterNode::attachPosition(PositionCallback function){
- this->positionCallback = function;
+void RollerShutterNode::attachLevel(LevelCallback function){
+ this->levelCallback = function;
 }
 
-void RollerShutterNode::attachCommand(CommandCallback function){
- this->commandCallback = function;
-}
 
-bool RollerShutterNode::handleInput(const String& property, const HomieRange& range, const String& value) {
-  if (property.compareTo(NODE_POSITION) == 0){
-    this->positionCallback(value);
+bool RollerShutterNode::handleInput(const HomieRange& range, const String& property, const String& value) {
+  if (property.compareTo(CHANNEL_LEVEL_ID) == 0){
+    this->levelCallback(value);
     return true;
   }
 
-  if (property.compareTo(NODE_COMAND) == 0){
-    this->commandCallback(value);
-    return true;
-    }
 }
 
-void RollerShutterNode::setPosition(String value){
-  this->setProperty(NODE_POSITION).send(value);
+void RollerShutterNode::setLevel(String value){
+  this->setProperty(CHANNEL_LEVEL_ID).send(value);
 }

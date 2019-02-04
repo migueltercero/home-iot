@@ -1,33 +1,26 @@
 #include "LightNode.h"
 
-LightNode::LightNode(const String& id): HomieNode(id.c_str(), "Light"){
-  this->advertise(NODE_STATUS).settable();
-}
-const char* LightNode::getStatus(enum Status status)
-{
-  switch (status)
-  {
-    case ON: return "ON";
-    case OFF: return "OFF";
-  }
+LightNode::LightNode(const String& id): HomieNode("light", "Light", "Light"){
+  this->advertise(CHANNEL_POWER_ID)
+    .settable()
+    .setName(CHANNEL_POWER_DESCRIPTION)
+    .setDatatype("boolean");
 }
 
-bool LightNode::handleInput(const String& property, const HomieRange& range, const String& value) {
-  if (property.compareTo(NODE_STATUS) == 0){
-    if(value.compareTo(getStatus(ON)) == 0){
-      this->_callbackFunction(true);
-    }
-    if(value.compareTo(getStatus(OFF)) == 0){
-      this->_callbackFunction(false);
-    }
-  }
+bool LightNode::handleInput(const HomieRange& range, const String& property, const String& value) {
+  if (value != "true" && value != "false") return false;
+
+  bool status = (value == "true"); 
+  this->_callbackStatus(status);
+  
+  return true;
 }
 
 void LightNode::attachStatus(callbackStatus function){
- this->_callbackFunction = function;
+ this->_callbackStatus = function;
 }
 
 void LightNode::setStatus(bool on){
-  Status status = on ? ON : OFF;
-  this->setProperty(NODE_STATUS).send(getStatus(status));
+  String status = on ? "true" : "false";
+  this->setProperty(CHANNEL_POWER_ID).send(status);
 }

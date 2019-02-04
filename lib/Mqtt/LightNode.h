@@ -3,8 +3,8 @@
 
 #include <Homie.h>
 
-
-#define NODE_STATUS "status"
+#define CHANNEL_POWER_ID "power"
+#define CHANNEL_POWER_DESCRIPTION "Power ON/OFF"
 
 extern "C" {
   typedef std::function<void(bool)> callbackStatus;
@@ -12,15 +12,9 @@ extern "C" {
 
 class LightNode : public HomieNode {
   protected:
-    enum Status : unsigned char { ON, OFF };
-
-    const char* getStatus(enum Status status);
-
-    callbackStatus _callbackFunction;
-
-    virtual bool handleInput(const String& property, const HomieRange& range, const String& value);
-
-
+    callbackStatus _callbackStatus;
+    virtual bool handleInput(const HomieRange& range, const String& property, const String& value);
+ 
  public:
    LightNode(const String& id);
 

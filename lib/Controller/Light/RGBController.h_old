@@ -1,19 +1,19 @@
-#ifndef LightController_H
-#define LightController_H
+#ifndef RGBController_H
+#define RGBController_H
 
 #include "Controller.h"
-#include "LightNode.h"
+#include "RGBNode.h"
 #include "OneButton.h"
-#include "Light.h"
+#include <RGBLed.h>
 
 
 using namespace std;
 using namespace std::placeholders;
 
-class LightController : public Controller{
+class RGBController : public Controller{
   protected:
-    Light *light;
-    LightNode *mqtt;
+    RGBLed *rgb;
+    RGBNode *mqtt;
     OneButton *button;
 
 
@@ -26,7 +26,7 @@ class LightController : public Controller{
     void on();
 
   public:
-    LightController(const int id, const int buttonPin, const int lightPin);
+    RGBController(const int id, const int buttonPin, const int r, const int g, const int b);
     void loop();
 };
 #endif

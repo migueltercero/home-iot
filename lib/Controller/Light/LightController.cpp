@@ -1,6 +1,6 @@
 #include "LightController.h"
 
-LightController::LightController(const String& id, int buttonPin, int lightPin) : Controller(id)
+LightController::LightController(const int id, int buttonPin, int lightPin) : Controller(id)
 {
   light = new Light(lightPin);
   mqtt = new LightNode(name);

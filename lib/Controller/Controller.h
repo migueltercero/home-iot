@@ -18,14 +18,14 @@ protected:
     String name;
     int conf[20];
   public:
-    Controller(const String& id);
+    Controller(const int id);
     virtual void loop();
 };
 
 class ControllerFactory {
   public:
     ControllerFactory();
-    Controller* createController(const String& id, const char* conf);
+    Controller* createController(const int id, const char* conf);
 
   private:
     void split(const string &s, const char* delim, vector<string> &v);

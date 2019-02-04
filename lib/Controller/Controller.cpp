@@ -6,7 +6,7 @@
 ControllerFactory::ControllerFactory() {
 }
 
-Controller::Controller(const String& id){
+Controller::Controller(const int id){
   this->name = String(id);
 }
 
@@ -14,7 +14,7 @@ void Controller::loop(void){
 
 }
 
-Controller* ControllerFactory::createController(const String& id, const char* conf) {
+Controller* ControllerFactory::createController(const int id, const char* conf) {
   vector<string> cfg;
   split(conf, ",", cfg);
   if (cfg.size() > 1){

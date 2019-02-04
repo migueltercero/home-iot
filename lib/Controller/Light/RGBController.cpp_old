@@ -1,0 +1,41 @@
+#include "RGBController.h"
+
+RGBController::RGBController(const int id, int buttonPin, int r, int g, int b) : Controller(id)
+{
+  rgb = new RGBLed(ANODE, 9, 10, 11);
+  mqtt = new RGBNode(name);
+  button = new OneButton(buttonPin, true);
+
+  button->attachClick(bind(&RGBController::buttonClickHandler, this));
+  mqtt->attachStatus(bind(&RGBController::mqttStatusHandler, this, _1));
+}
+
+void RGBController::buttonClickHandler(){
+  if(light->isActive()){
+    off();
+  }else {
+    on();
+  }
+}
+
+void RGBController::mqttStatusHandler(bool active){
+  if(active){
+    on();
+  } else {
+    off();
+  }
+}
+
+void RGBController::off(){
+  rgb->off();
+  mqtt->setStatus(false);
+}
+
+void RGBController::on(){
+  rgb->on();
+  mqtt->setStatus(true);
+}
+
+void RGBController::loop(){
+  button->tick();
+}

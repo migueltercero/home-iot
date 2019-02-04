@@ -19,7 +19,7 @@ class LightTimerController : public LightController {
     void timerHandler();
 
   public:
-    LightTimerController(const String& id, const int buttonPin, const int lightPin,const int seconds);
+    LightTimerController(const int id, const int buttonPin, const int lightPin,const int seconds);
     void loop();
 };
 #endif

@@ -1,7 +1,7 @@
 #include "RollerShutterController.h"
 #include "TimedAction.h"
 
-RollerShutterController::RollerShutterController(const String& id, const int upButtonPin, const int downButtonPin, const int upShutterPin, const int downShutterPin, const int seconds) : Controller(id)
+RollerShutterController::RollerShutterController(const int id, const int upButtonPin, const int downButtonPin, const int upShutterPin, const int downShutterPin, const int seconds) : Controller(id)
 ,_upShutterPin(upShutterPin)
 ,_downShutterPin(downShutterPin)
 {
@@ -38,9 +38,8 @@ RollerShutterController::RollerShutterController(const String& id, const int upB
   downButton->attachLongPressStart(bind(&RollerShutterController::downButtonLongPressStartHandler, this));
   downButton->attachLongPressStop(bind(&RollerShutterController::buttonLongPressStopHandler, this));
 
-  mqtt->attachPosition(bind(&RollerShutterController::mqttPositionHandler, this, _1));
-  mqtt->attachCommand(bind(&RollerShutterController::mqttCommandHandler, this, _1));
-
+  mqtt->attachLevel(bind(&RollerShutterController::mqttLevelHandler, this, _1));
+  
 }
 
 // shutters handler
@@ -101,26 +100,14 @@ void RollerShutterController::timerHandler() {
 }
 
 // mqtt events
-void RollerShutterController::mqttPositionHandler(String value) {
+void RollerShutterController::mqttLevelHandler(String value) {
   shutter->setLevel(value.toInt());
-}
-
-void RollerShutterController::mqttCommandHandler(String value) {
-  if (value.compareTo("STOP") == 0){
-    shutter->stop();
-  }
-  if (value.compareTo("UP") == 0){
-    shutter->setLevel(ShuttersInternal::UP_LEVEL);
-  }
-  if (value.compareTo("DOWN") == 0){
-    shutter->setLevel(ShuttersInternal::DOWN_LEVEL);
-  }
 }
 
 void RollerShutterController::updateStatus() {
   String value = String(shutter->getCurrentLevel());
   log("mqtt <- " + value);
-  mqtt->setPosition(value);
+  mqtt->setLevel(value);
 }
 
 
