@@ -104,7 +104,7 @@ void RollerShutterController::mqttLevelHandler(String value) {
   log("mqtt received: " + value);
   int level = value.toInt();
   if(level == 255){
-    shutter->stop();
+    shutter->stop(); 
   }else {
     shutter->setLevel(level);
   }
