@@ -21,5 +21,6 @@ class LightTimerController : public LightController {
   public:
     LightTimerController(const int id, const int buttonPin, const int lightPin,const int seconds);
     void loop();
+    void updateStatus();
 };
 #endif

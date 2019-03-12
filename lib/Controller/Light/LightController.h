@@ -28,5 +28,6 @@ class LightController : public Controller{
   public:
     LightController(const int id, const int buttonPin, const int lightPin);
     void loop();
+    void updateStatus();
 };
 #endif

@@ -28,12 +28,16 @@ void LightController::mqttStatusHandler(bool active){
 
 void LightController::off(){
   light->off();
-  mqtt->setStatus(false);
+  updateStatus();
 }
 
 void LightController::on(){
   light->on();
-  mqtt->setStatus(true);
+  updateStatus();
+}
+
+void LightController::updateStatus(){
+  mqtt->setStatus(light->isActive());
 }
 
 void LightController::loop(){

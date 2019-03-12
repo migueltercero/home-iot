@@ -75,6 +75,11 @@ void onHomieEvent(const HomieEvent &event) {
       timer = new TimedAction(rebootTime.get() * 60 * 60 * 1000, timerHandler);
     }
     break;
+ case HomieEventType::MQTT_READY:
+    for (int i = 0; i < controllerCount.get(); i++) {
+      controllers[i]->updateStatus();
+    }
+    break;
   default:
     break;
   }
@@ -82,6 +87,12 @@ void onHomieEvent(const HomieEvent &event) {
 
 void setup() {
   Serial.begin(115200);
+
+  //Homie.reset();
+  
+  Homie.setLedPin(GPIO_LED, HIGH);
+  Homie_setFirmware(FW_NAME, FW_VERSION);
+  Homie.setResetTrigger(0, LOW, 500);
 
   // default values
   reboot.setDefaultValue(true);
@@ -93,17 +104,17 @@ void setup() {
   controller3.setDefaultValue("none");
 
   preSetupHandler();
-  //Homie.loadSettings();
+  // Homie.loadSettings();
+  Homie.setLoopFunction(loopHandler);
 
-  // homie setup
-  Homie.setLedPin(GPIO_LED, HIGH);
-  Homie_setFirmware(FW_NAME, FW_VERSION);
-  Homie.setResetTrigger(0, LOW, 500);
   Homie.onEvent(onHomieEvent);
   // Homie.disableLogging();
   // Homie.setLoggingPrinter(logger.);
-  Homie.setLoopFunction(loopHandler);
+  
+  
   Homie.setup();
 }
 
-void loop() { Homie.loop(); }
+void loop() { 
+  Homie.loop(); 
+}

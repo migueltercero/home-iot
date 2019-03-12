@@ -101,12 +101,18 @@ void RollerShutterController::timerHandler() {
 
 // mqtt events
 void RollerShutterController::mqttLevelHandler(String value) {
-  shutter->setLevel(value.toInt());
+  log("mqtt received: " + value);
+  int level = value.toInt();
+  if(level == 255){
+    shutter->stop();
+  }else {
+    shutter->setLevel(level);
+  }
 }
 
 void RollerShutterController::updateStatus() {
   String value = String(shutter->getCurrentLevel());
-  log("mqtt <- " + value);
+  log("mqtt update: " + value);
   mqtt->setLevel(value);
 }
 

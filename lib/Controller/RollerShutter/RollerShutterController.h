@@ -42,13 +42,13 @@ class RollerShutterController : public Controller{
 
     // mqtt handlers
     void mqttLevelHandler(String value);
-    void updateStatus();
 
     void log(String text);
 
   public:
     RollerShutterController(const int id, const int upButtonPin, const int downButtonPin, const int upShutterPin, const int downShutterPin, const int seconds);
     void loop();
+    void updateStatus();
 };
 
 #endif

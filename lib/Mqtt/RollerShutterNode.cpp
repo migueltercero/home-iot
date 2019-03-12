@@ -4,10 +4,10 @@
 RollerShutterNode::RollerShutterNode(const String& id): HomieNode("rollershutter", "RollerShutter", "RollerShutter"){
   this->advertise(CHANNEL_LEVEL_ID)
       .setName(CHANNEL_LEVEL_DESCRIPTION)
-      .setDatatype("integer")
-      .setFormat("0:115")
+      .setDatatype("enum")
+      .setFormat("up,down,stop")
+      .setUnit("%")
       .settable();
-
 }
 
 void RollerShutterNode::attachLevel(LevelCallback function){
@@ -24,5 +24,8 @@ bool RollerShutterNode::handleInput(const HomieRange& range, const String& prope
 }
 
 void RollerShutterNode::setLevel(String value){
-  this->setProperty(CHANNEL_LEVEL_ID).send(value);
+  //this->setProperty(CHANNEL_LEVEL_ID).send(value);
+  if (Homie.isConnected()){
+    this->setProperty(CHANNEL_LEVEL_ID).send(value);
+  }
 }

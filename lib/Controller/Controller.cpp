@@ -14,6 +14,10 @@ void Controller::loop(void){
 
 }
 
+void Controller::updateStatus(void){
+
+}
+
 Controller* ControllerFactory::createController(const int id, const char* conf) {
   vector<string> cfg;
   split(conf, ",", cfg);

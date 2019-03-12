@@ -3,8 +3,8 @@
 
 #include <Homie.h>
 
-#define CHANNEL_LEVEL_ID "command"
-#define CHANNEL_LEVEL_DESCRIPTION "Level 0:115"
+#define CHANNEL_LEVEL_ID "level"
+#define CHANNEL_LEVEL_DESCRIPTION "Level"
 
 extern "C" {
   typedef std::function<void(String)> LevelCallback;

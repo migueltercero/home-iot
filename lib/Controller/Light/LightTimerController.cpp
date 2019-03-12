@@ -29,14 +29,19 @@ void LightTimerController::timerHandler(){
 
 void LightTimerController::off(){
   LightController::off();
+  updateStatus();
   this->timer.disable();
 }
 
 void LightTimerController::on(){
   LightController::on();
+  updateStatus();
   this->timer.enable();
 }
 
+void LightTimerController::updateStatus(){
+  mqtt->setStatus(light->isActive());
+}
 
 void LightTimerController::loop(){
   LightController::loop();

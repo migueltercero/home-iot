@@ -20,6 +20,7 @@ protected:
   public:
     Controller(const int id);
     virtual void loop();
+    virtual void updateStatus();
 };
 
 class ControllerFactory {

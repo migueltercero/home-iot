@@ -14,8 +14,8 @@ namespace ShuttersInternal {
   const uint16_t SAFETY_DELAY = 1 * 1000;
   const uint8_t LEVELS = 100;
 
-  const uint8_t UP_LEVEL = 10;
-  const uint8_t DOWN_LEVEL = 115;
+  const uint8_t UP_LEVEL = 0;
+  const uint8_t DOWN_LEVEL = 100;
 
   enum State : uint8_t {
     STATE_IDLE, // not moving
