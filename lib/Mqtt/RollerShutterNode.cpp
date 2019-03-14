@@ -1,31 +1,21 @@
-#include "RollerShutterNode.h"
+#include "Node.cpp"
 
+#define NODE_ID "rollershutter"
+#define NODE_NAME "Roller Shutter Controller"
+#define NODE_TYPE "Rollershutter"
+#define PROPERTY_ID "level"
+#define PROPERTY_NAME "Level"
+#define PROPERTY_DATATYPE "integer"
+#define PROPERTY_FORMAT "0:100"
+#define PROPERTY_UNIT "%"
 
-RollerShutterNode::RollerShutterNode(const String& id): HomieNode("rollershutter", "RollerShutter", "RollerShutter"){
-  this->advertise(CHANNEL_LEVEL_ID)
-      .setName(CHANNEL_LEVEL_DESCRIPTION)
-      .setDatatype("enum")
-      .setFormat("up,down,stop")
-      .setUnit("%")
-      .settable();
-}
+class RollerShutterNode : public Node<String> {
+public:
+  RollerShutterNode(const String &id)
+      : Node(NODE_ID, NODE_NAME, NODE_TYPE, PROPERTY_ID, PROPERTY_NAME,
+             PROPERTY_DATATYPE, PROPERTY_FORMAT, PROPERTY_UNIT) {}
 
-void RollerShutterNode::attachLevel(LevelCallback function){
- this->levelCallback = function;
-}
+  String fromString(String value) { return value; }
 
-
-bool RollerShutterNode::handleInput(const HomieRange& range, const String& property, const String& value) {
-  if (property.compareTo(CHANNEL_LEVEL_ID) == 0){
-    this->levelCallback(value);
-    return true;
-  }
-
-}
-
-void RollerShutterNode::setLevel(String value){
-  //this->setProperty(CHANNEL_LEVEL_ID).send(value);
-  if (Homie.isConnected()){
-    this->setProperty(CHANNEL_LEVEL_ID).send(value);
-  }
-}
+  String toString(String value) { return value; }
+};

@@ -5,7 +5,7 @@ LightTimerController::LightTimerController(const int id, const int lightPin, con
 , timer(seconds*1000, bind(&LightTimerController::timerHandler, this))
 {
   button->attachClick(bind(&LightTimerController::buttonClickHandler, this));
-  mqtt->attachStatus(bind(&LightTimerController::mqttStatusHandler, this, _1));
+  mqtt->attachProperty(bind(&LightTimerController::mqttStatusHandler, this, _1));
 }
 
 void LightTimerController::buttonClickHandler(){
@@ -15,7 +15,7 @@ void LightTimerController::buttonClickHandler(){
   this->timer.enable();
 }
 
-void LightTimerController::mqttStatusHandler(bool active){
+void LightTimerController::mqttStatusHandler(boolean active){
   if(active){
     this->on();
   } else {
@@ -40,7 +40,7 @@ void LightTimerController::on(){
 }
 
 void LightTimerController::updateStatus(){
-  mqtt->setStatus(light->isActive());
+  mqtt->send(light->isActive());
 }
 
 void LightTimerController::loop(){

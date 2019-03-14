@@ -10,7 +10,7 @@ class LightTimerController : public LightController {
 
     void buttonClickHandler();
 
-    void mqttStatusHandler(bool active);
+    void mqttStatusHandler(boolean active);
 
     void on();
 

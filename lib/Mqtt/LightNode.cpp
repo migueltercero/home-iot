@@ -1,26 +1,13 @@
-#include "LightNode.h"
+#include "Node.cpp"
 
-LightNode::LightNode(const String& id): HomieNode("light", "Light", "Light"){
-  this->advertise(CHANNEL_POWER_ID)
-    .settable()
-    .setName(CHANNEL_POWER_DESCRIPTION)
-    .setDatatype("boolean");
-}
+class LightNode : public Node<boolean> {
+public:
+  LightNode(const String &id)
+      : Node("light", "Light Controller", "Switch", "power", "Power ON/OFF",
+             "boolean", "", "") {}
 
-bool LightNode::handleInput(const HomieRange& range, const String& property, const String& value) {
-  if (value != "true" && value != "false") return false;
+  boolean fromString(String value) { return (value == "true"); }
 
-  bool status = (value == "true"); 
-  this->_callbackStatus(status);
-  
-  return true;
-}
+  String toString(boolean value) { return value ? "true" : "false"; }
 
-void LightNode::attachStatus(callbackStatus function){
- this->_callbackStatus = function;
-}
-
-void LightNode::setStatus(bool on){
-  String status = on ? "true" : "false";
-  this->setProperty(CHANNEL_POWER_ID).send(status);
-}
+};

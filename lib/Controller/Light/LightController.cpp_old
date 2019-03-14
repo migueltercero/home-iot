@@ -7,7 +7,7 @@ LightController::LightController(const int id, int buttonPin, int lightPin) : Co
   button = new OneButton(buttonPin, true);
 
   button->attachClick(bind(&LightController::buttonClickHandler, this));
-  mqtt->attachStatus(bind(&LightController::mqttStatusHandler, this, _1));
+  mqtt->attachProperty(bind(&LightController::mqttStatusHandler, this, _1));
 }
 
 void LightController::buttonClickHandler(){
@@ -18,7 +18,7 @@ void LightController::buttonClickHandler(){
   }
 }
 
-void LightController::mqttStatusHandler(bool active){
+void LightController::mqttStatusHandler(boolean active){
   if(active){
     on();
   } else {
@@ -37,7 +37,7 @@ void LightController::on(){
 }
 
 void LightController::updateStatus(){
-  mqtt->setStatus(light->isActive());
+  mqtt->send(light->isActive());
 }
 
 void LightController::loop(){

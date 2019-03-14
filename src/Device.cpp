@@ -1,6 +1,6 @@
-#include "Controller.h"
-#include "TimedAction.h"
 #include <Homie.h>
+#include "ControllerFactory.cpp"
+#include "TimedAction.h"
 
 #define FW_NAME "home-iot"
 #define FW_VERSION "2.0.0"
@@ -104,7 +104,7 @@ void setup() {
   controller3.setDefaultValue("none");
 
   preSetupHandler();
-  // Homie.loadSettings();
+  //Homie.loadSettings();
   Homie.setLoopFunction(loopHandler);
 
   Homie.onEvent(onHomieEvent);
