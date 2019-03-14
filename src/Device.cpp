@@ -16,7 +16,8 @@ const char *__FLAGGED_FW_VERSION =
 
 TimedAction *timer;
 
-Controller *controllers[4];
+//Controller *controllers[4];
+std::vector<Controller*> controllers;
 ControllerFactory *factory = new ControllerFactory;
 
 HomieSetting<bool> reboot("reboot", "¿reinicio periodico?");
@@ -46,15 +47,15 @@ void preSetupHandler() {
 
     for (int i = 0; i < atoi(parsedJson["settings"]["controllerCount"]); i++) {
       String conf = String("controller" + String(i));
-      controllers[i] = factory->createController(
-          i + 1, parsedJson["settings"][conf.c_str()]);
+      controllers.push_back(factory->createController(
+          i + 1, parsedJson["settings"][conf.c_str()]));
     }
   }
 }
 
 void loopHandler() {
-  for (int i = 0; i < controllerCount.get(); i++) {
-    controllers[i]->loop();
+  for (Controller* controller : controllers) {
+    controller->loop();
   }
 
   if (reboot.get()) {
@@ -71,13 +72,12 @@ void onHomieEvent(const HomieEvent &event) {
   switch (event.type) {
   case HomieEventType::NORMAL_MODE:
     if (reboot.get()) {
-      // timer
       timer = new TimedAction(rebootTime.get() * 60 * 60 * 1000, timerHandler);
     }
     break;
  case HomieEventType::MQTT_READY:
-    for (int i = 0; i < controllerCount.get(); i++) {
-      controllers[i]->updateStatus();
+    for (Controller* controller : controllers) {
+      controller->updateStatus();
     }
     break;
   default:
