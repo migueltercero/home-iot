@@ -1,23 +1,23 @@
 #ifndef Controller_Factory_H
 #define Controller_Factory_H
 
-#include "Controller.cpp"
-#include "LightController.cpp"
-#include "RollerShutterController.cpp"
+#include "Node.cpp"
+#include "LightNode.cpp"
+#include "RollershutterNode.cpp"
 
 
 using namespace std;
 
-class ControllerFactory {
+class NodeFactory {
 public:
-  ControllerFactory(){}
-  Controller *createController(const int id, const char *conf) {
+  NodeFactory(){}
+  Node *createController(const int id, const char *conf) {
     vector<string> cfg;
     split(conf, ",", cfg);
     if (cfg.size() > 1) {
       string controller = cfg[0];
       if (controller.compare("light") == 0) {
-        return new LightController(id, atoi(cfg[1].c_str()),
+        return new LightNode(id, atoi(cfg[1].c_str()),
                                    atoi(cfg[2].c_str()));
       }
       // if(controller.compare("light-timer") == 0){
@@ -25,7 +25,7 @@ public:
       // atoi(cfg[2].c_str()), atoi(cfg[3].c_str())); return;
       //}
       if (controller.compare("rollershutter") == 0) {
-        return new RollerShutterController(
+        return new RollershutterNode(
             id, atoi(cfg[1].c_str()), atoi(cfg[2].c_str()),
             atoi(cfg[3].c_str()), atoi(cfg[4].c_str()), atoi(cfg[5].c_str()));
       }

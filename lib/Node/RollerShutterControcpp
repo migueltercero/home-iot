@@ -1,19 +1,17 @@
-#ifndef RollerShutterController_H
-#define RollerShutterController_H
+#ifndef RollerShutterNode_H
+#define RollerShutterNode_H
 
-#include "Controller.cpp"
+#include "Node.cpp"
 #include "OneButton.h"
-#include "RollerShutterNode.cpp"
-
 #include <Shutters.h>
 #include <EEPROM.h>
 
 using namespace std;
 using namespace std::placeholders;
 
-class RollerShutterController : public Controller {
+class RollerShutterNode : public Node {
 public:
-  RollerShutterController(const int id, const int upButtonPin,
+  RollerShutterNode(const int id, const int upButtonPin,
                           const int downButtonPin, const int upShutterPin,
                           const int downShutterPin, const int seconds)
       : Controller(id), _upShutterPin(upShutterPin),
