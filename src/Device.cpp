@@ -18,6 +18,8 @@ TimedAction* timer;
 std::vector<Node*> nodes;
 NodeFactory* factory = new NodeFactory;
 
+Node* ntpNode = new NTPNode();
+
 HomieSetting<bool> reboot("reboot", "¿reinicio periodico?");
 HomieSetting<long> rebootTime("rebootTime", "Frecuencia en horas de cada reinicio");
 HomieSetting<long> nodeCount("controllerCount", "Number of Controllers");

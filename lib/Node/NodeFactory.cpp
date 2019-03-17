@@ -4,7 +4,7 @@
 #include "Node.cpp"
 #include "LightNode.cpp"
 #include "RollershutterNode.cpp"
-
+#include "NTPNode.cpp"
 
 using namespace std;
 
