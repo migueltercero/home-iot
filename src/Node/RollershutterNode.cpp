@@ -22,20 +22,22 @@ private:
   OneButton* upButton;
   OneButton* downButton;
 
+  const char* level = "level";
+
 public:
   RollershutterNode(const int id, const int upButtonPin, const int downButtonPin, const int upShutterPin, const int downShutterPin,
                     const int seconds)
-      : Node("rollershutter", "Rollershutter Node", "Rollershutter", "level", "Level", "integer", "0:100", "%"), upButtonPin(upButtonPin),
-        downButtonPin(downButtonPin), upShutterPin(upShutterPin), downShutterPin(downShutterPin), seconds(seconds) {}
+      : Node("rollershutter", "Rollershutter Node", "Rollershutter"), upButtonPin(upButtonPin), downButtonPin(downButtonPin),
+        upShutterPin(upShutterPin), downShutterPin(downShutterPin), seconds(seconds) {}
 
 protected:
   void setup() {
     Node::setup();
 
-    // EEPROM
+    this->advertise(level).setName("Level").setDatatype("integer").setFormat("0:100").setUnit("%").settable();
+    
     EEPROM.begin(4);
 
-    // gpio
     pinMode(upShutterPin, OUTPUT);
     pinMode(downShutterPin, OUTPUT);
     digitalWrite(upShutterPin, LOW);
@@ -59,8 +61,6 @@ protected:
     downButton->attachClick(bind(&RollershutterNode::buttonDownClickCallback, this));
     downButton->attachLongPressStart(bind(&RollershutterNode::buttonDownLongPressStartCallback, this));
     downButton->attachLongPressStop(bind(&RollershutterNode::buttonLongPressStopCallback, this));
-
-    this->attachProperty(bind(&RollershutterNode::mqttCallback, this, _1));
   }
 
   void loop() {
@@ -73,7 +73,20 @@ protected:
 
   void onReadyToOperate() {
     String status = String(shutter->getCurrentLevel());
-    this->send(status);
+    this->send(level, status);
+  }
+
+  bool handleInput(const HomieRange& range, const String& property, const String& value) {
+    Node::handleInput(range, property, value);
+
+    if (property == level) {
+      int level = value.toInt();
+      if (level == 255) {
+        shutter->stop();
+      } else {
+        shutter->setLevel(level);
+      }
+    }
   }
 
   void output(uint8_t up, uint8_t down) {
@@ -153,14 +166,5 @@ protected:
 
   // rollerShuter Callbacks
   void rollerShutterStatusCallback(String value) { onReadyToOperate(); }
-
-  void mqttCallback(String value) {
-    int level = value.toInt();
-    if (level == 255) {
-      shutter->stop();
-    } else {
-      shutter->setLevel(level);
-    }
-  }
 };
 #endif

@@ -17,19 +17,22 @@ private:
   Light* light;
   OneButton* button;
 
+  const char* power = "power";
+
 public:
   LightNode(const int id, const int buttonPin, const int lightPin)
-      : Node("light", "Light Node", "Switch", "power", "Power ON/OFF", "boolean", "", ""), buttonPin(buttonPin), lightPin(lightPin) {}
+      : Node("light", "Light Node", "Switch"), buttonPin(buttonPin), lightPin(lightPin) {}
 
 protected:
   void setup() {
     Node::setup();
 
+    this->advertise(power).setName("Power ON/OFF").setDatatype("boolean").settable();
+
     light = new Light(lightPin);
     button = new OneButton(buttonPin, true);
 
     button->attachClick(bind(&LightNode::buttonClickCallback, this));
-    this->attachProperty(bind(&LightNode::mqttCallback, this, _1));
   }
 
   void loop() {
@@ -39,7 +42,22 @@ protected:
 
   void onReadyToOperate() {
     String status = light->isActive() ? "true" : "false";
-    this->send(status);
+    this->send(power, status);
+  }
+
+  bool handleInput(const HomieRange& range, const String& property, const String& value) {
+    Node::handleInput(range, property, value);
+
+    if (property == power) {
+      boolean power = (value == "true");
+      if (power) {
+        on();
+      } else {
+        off();
+      }
+      return true;
+    }
+    return false;
   }
 
   void buttonClickCallback() {
@@ -48,15 +66,6 @@ protected:
       off();
     } else {
       on();
-    }
-  }
-
-  void mqttCallback(String value) {
-    boolean power = (value == "true");
-    if (power) {
-      on();
-    } else {
-      off();
     }
   }
 

@@ -12,7 +12,7 @@ public:
   }
   String getFormattedTime() {
     char formatedTime[20];
-    sprintf(formatedTime, "%i:%i:%i %i/%i/%i", day(), month(), year(), hour(), minute(), second());
+    sprintf(formatedTime, "%i/%i/%i %i:%i:%i", day(), month(), year(), hour(), minute(), second());
     return String(formatedTime);
   }
 };
