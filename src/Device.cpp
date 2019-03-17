@@ -19,9 +19,9 @@ NodeFactory* factory = new NodeFactory;
 
 HomieNode* ntpNode = new NTPNode();
 
-HomieSetting<bool> reboot("reboot", "¿reinicio periodico?");
-HomieSetting<long> rebootTime("rebootTime", "Frecuencia en horas de cada reinicio");
-HomieSetting<long> nodeCount("controllerCount", "Number of Controllers");
+HomieSetting<bool> reboot("reboot", "¿reboot programmed?");
+HomieSetting<long> rebootTime("rebootTime", "Frecuency in hours for reboot");
+HomieSetting<long> nodeCount("controllerCount", "Number of Nodes");
 
 HomieSetting<const char*> controller0("controller0", "rollershutter,4,5,12,13,24");
 HomieSetting<const char*> controller1("controller1", "light,4,12");
