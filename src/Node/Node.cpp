@@ -12,7 +12,7 @@ private:
   TimedAction* timer;
 
 public:
-  Node(const char* nodeId, const char* nodeName, const char* nodeType) : HomieNode(nodeId, nodeName, nodeType), propertyId(propertyId) {
+  Node(const char* nodeId, const char* nodeName, const char* nodeType) : HomieNode(nodeId, nodeName, nodeType) {
     this->setRunLoopDisconnected(true);
   }
 
