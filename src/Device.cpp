@@ -1,5 +1,4 @@
-#include "Logger.cpp"
-#include "NodeFactory.cpp"
+#include "Node/NodeFactory.cpp"
 #include "TimedAction.h"
 #include <Homie.h>
 
@@ -15,10 +14,10 @@ const char* __FLAGGED_FW_VERSION = "\x6a\x3f\x3e\x0e\xe1" FW_VERSION "\xb0\x30\x
 
 TimedAction* timer;
 
-std::vector<Node*> nodes;
+std::vector<HomieNode*> nodes;
 NodeFactory* factory = new NodeFactory;
 
-Node* ntpNode = new NTPNode();
+HomieNode* ntpNode = new NTPNode();
 
 HomieSetting<bool> reboot("reboot", "¿reinicio periodico?");
 HomieSetting<long> rebootTime("rebootTime", "Frecuencia en horas de cada reinicio");
@@ -56,7 +55,6 @@ void loopHandler() {
 }
 
 void timerHandler() {
-  log("Device", "reboot");
   Homie.reboot();
 }
 

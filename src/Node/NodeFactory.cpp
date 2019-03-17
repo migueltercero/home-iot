@@ -1,5 +1,5 @@
-#ifndef Controller_Factory_H
-#define Controller_Factory_H
+#ifndef NodeFactory_H
+#define NodeFactory_H
 
 #include "Node.cpp"
 #include "LightNode.cpp"
@@ -11,7 +11,7 @@ using namespace std;
 class NodeFactory {
 public:
   NodeFactory(){}
-  Node *createController(const int id, const char *conf) {
+  HomieNode *createController(const int id, const char *conf) {
     vector<string> cfg;
     split(conf, ",", cfg);
     if (cfg.size() > 1) {

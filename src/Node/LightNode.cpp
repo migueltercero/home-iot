@@ -1,15 +1,15 @@
 #ifndef LightController_H
 #define LightController_H
 
-#include "Light.h"
-#include "Logger.cpp"
+#include "Controller/Light.cpp"
+#include "Log/Logger.cpp"
 #include "Node.cpp"
 #include "OneButton.h"
 
 using namespace std;
 using namespace std::placeholders;
 
-class LightNode : public Node {
+class LightNode : public Node<LightNode> {
 private:
   const int buttonPin;
   const int lightPin;
@@ -42,10 +42,8 @@ protected:
     this->send(status);
   }
 
-  String getLoggerName() { return "LightNode"; }
-
   void buttonClickCallback() {
-    log("LightController", "click");
+    log.info("click");
     if (light->isActive()) {
       off();
     } else {
@@ -64,13 +62,13 @@ protected:
 
   void off() {
     light->off();
-    log("Light", "off");
+    log.info("off");
     onReadyToOperate();
   }
 
   void on() {
     light->on();
-    log("Light", "on");
+    log.info("on");
     onReadyToOperate();
   }
 };

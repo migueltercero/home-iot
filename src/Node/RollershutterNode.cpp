@@ -2,7 +2,7 @@
 #define Rollershutter_H
 
 #include "EEPROM.h"
-#include "Logger.cpp"
+#include "Log/Logger.cpp"
 #include "Node.cpp"
 #include "OneButton.h"
 #include "Shutters.h"
@@ -10,7 +10,7 @@
 using namespace std;
 using namespace std::placeholders;
 
-class RollershutterNode : public Node {
+class RollershutterNode : public Node<RollershutterNode> {
 private:
   const int upButtonPin;
   const int downButtonPin;
@@ -43,7 +43,7 @@ protected:
 
     shutter =
         new Shutters(seconds * 1000, bind(&RollershutterNode::upCallback, this), bind(&RollershutterNode::downCallback, this),
-                     bind(&RollershutterNode::haltCallback, this), bind(&RollershutterNode::getLevelCallback, this),
+                     bind(&RollershutterNode::stopCallback, this), bind(&RollershutterNode::getLevelCallback, this),
                      bind(&RollershutterNode::setLevelCallback, this, _1), bind(&RollershutterNode::onLevelReachedCallback, this, _1), 0.1);
     shutter->begin();
 
@@ -76,8 +76,6 @@ protected:
     this->send(status);
   }
 
-  String getLoggerName() { return "RollershutterNode"; }
-
   void output(uint8_t up, uint8_t down) {
     if (up == HIGH && down == HIGH) {
       return;
@@ -88,23 +86,23 @@ protected:
   }
 
   void upCallback() {
-    log(getLoggerName(), "up");
+    log.info("up");
     output(HIGH, LOW);
   }
 
   void downCallback() {
-    log(getLoggerName(), "down");
+    log.info("down");
     output(LOW, HIGH);
   }
 
-  void haltCallback() {
-    log(getLoggerName(), "stop");
+  void stopCallback() {
+    log.info("stop");
     output(LOW, LOW);
   }
 
   uint8_t getLevelCallback() {
     uint8_t level = EEPROM.read(0);
-    log(getLoggerName(), "EEPROM -> " + String(level));
+    log.info("EEPROM -> " + String(level));
     if (level >= ShuttersInternal::UP_LEVEL && level <= ShuttersInternal::DOWN_LEVEL) {
       return level;
     } else {
@@ -116,12 +114,12 @@ protected:
     if (level != 255) {
       EEPROM.write(0, level);
       EEPROM.commit();
-      log(getLoggerName(), "EEPROM <- " + String(level));
+      log.info("EEPROM <- " + String(level));
     }
   }
 
   void onLevelReachedCallback(uint8_t level) {
-    log(getLoggerName(), "level " + String(level));
+    log.info("level " + String(level));
     if (level % 10 == 0) {
       onReadyToOperate();
     }

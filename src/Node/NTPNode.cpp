@@ -1,20 +1,19 @@
-#ifndef TimeController_H
-#define TimeController_H
+#ifndef NTPNode_H
+#define NTPNode_H
 
-#include "Logger.cpp"
 #include "Node.cpp"
 #include "TimeLib.h"
 #include "TimedAction.h"
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 
-class NTPNode : public Node {
+class NTPNode : public Node<NTPNode> {
 private:
   WiFiUDP ntpUDP;
   NTPClient* ntpClient;
 
 public:
-  NTPNode() : Node("ntp", "NTP Node", "time", "time", "Time", "time", "", "") {}
+  NTPNode() : Node("ntp", "NTP Node", "time", "time", "Time", "string", "", "") {}
 
 protected:
   void setup() {
@@ -30,12 +29,8 @@ protected:
   void onReadyToOperate() {
     Node::onReadyToOperate();
     setTime(ntpClient->getEpochTime());
-    char formatedTime[20];
-    sprintf(formatedTime, "%i:%i:%i %i/%i/%i", hour(), minute(), second(), day(), month(), year());
-    send(formatedTime);
+     send(log.getFormattedTime());
   }
-
-  String getLoggerName() { return "NTPNode"; }
 };
 
 #endif
