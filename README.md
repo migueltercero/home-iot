@@ -18,9 +18,11 @@ Sample:
 
 Nodes supported:
 * Light -> Control light nodes. Fisical button supported
-  * node -> light
+  * mqtt node -> light
   * attributes
     * power -> true/false
+  * button
+    * short click -> turn on/off light
   * configuration -> light,button,output
     * button-> pin where fisical button has connected.
     * output -> pin where fisical light
@@ -29,6 +31,9 @@ Nodes supported:
   * node -> rollershutter
   * attributes
     * level -> 0:100. 255 for stop
+  * button
+    * short click -> up/down to the start/end level. If moving, stop blind.
+    * long click -> up/down until release button.
   * configuration -> rollershutter,buttonUP,buttonDOWN,outputUP,outputDOWN
     * buttonXX-> pin fisical button
     * outputXX -> pin fisical shutter 
