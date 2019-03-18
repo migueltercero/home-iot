@@ -20,6 +20,7 @@ protected:
     // reboot.setDefaultValue(true);
     // rebootTime.setDefaultValue(24);
     // nodeCount.setDefaultValue(0);
+    this->advertise("enable").setName("Enable").setDatatype("boolean");
     timer = new TimedAction(24 * 60 * 60 * 1000, bind(&RebootNode::timeCallback, this));
   }
 
