@@ -5,18 +5,19 @@
 #include "LightNode.cpp"
 #include "RollershutterNode.cpp"
 #include "NTPNode.cpp"
+#include "RebootNode.cpp"
 
 using namespace std;
 
 class NodeFactory {
 public:
   NodeFactory(){}
-  HomieNode *createController(const int id, const char *conf) {
+  HomieNode *createNode(const int id, const char *conf) {
     vector<string> cfg;
     split(conf, ",", cfg);
     if (cfg.size() > 1) {
-      string controller = cfg[0];
-      if (controller.compare("light") == 0) {
+      string node = cfg[0];
+      if (node.compare("light") == 0) {
         return new LightNode(id, atoi(cfg[1].c_str()),
                                    atoi(cfg[2].c_str()));
       }
@@ -24,7 +25,7 @@ public:
       // return new LightTimerController(id, atoi(cfg[1].c_str()),
       // atoi(cfg[2].c_str()), atoi(cfg[3].c_str())); return;
       //}
-      if (controller.compare("rollershutter") == 0) {
+      if (node.compare("rollershutter") == 0) {
         return new RollershutterNode(
             id, atoi(cfg[1].c_str()), atoi(cfg[2].c_str()),
             atoi(cfg[3].c_str()), atoi(cfg[4].c_str()), atoi(cfg[5].c_str()));

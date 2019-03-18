@@ -15,12 +15,13 @@ std::vector<HomieNode*> nodes;
 NodeFactory* factory = new NodeFactory;
 
 HomieNode* ntpNode = new NTPNode();
-HomieNode* rebootNode = new NTPNode();
+HomieNode* rebootNode = new RebootNode();
 
+HomieSetting<long> controllerCount("controllerCount", "Number of Nodes");
 HomieSetting<const char*> controller0("controller0", "rollershutter,4,5,12,13,24");
 HomieSetting<const char*> controller1("controller1", "light,4,12");
-HomieSetting<const char*> controller2("controller2", "Controller");
-HomieSetting<const char*> controller3("controller3", "Controller");
+HomieSetting<const char*> controller2("controller2", "node");
+HomieSetting<const char*> controller3("controller3", "node");
 
 void setupHandler() {
   SPIFFS.begin();
@@ -37,7 +38,7 @@ void setupHandler() {
 
     for (int i = 0; i < atoi(parsedJson["settings"]["controllerCount"]); i++) {
       String conf = String("controller" + String(i));
-      nodes.push_back(factory->createController(i + 1, parsedJson["settings"][conf.c_str()]));
+      nodes.push_back(factory->createNode(i + 1, parsedJson["settings"][conf.c_str()]));
     }
   }
 }
