@@ -1,0 +1,56 @@
+#ifndef PwdRGB_H
+#define PwdRGB_H
+
+#include <Log/Logger.cpp>
+#include <Arduino.h>
+#include <FastLED.h>
+
+class PwdRGB {
+private:
+  Logger<PwdRGB> logger;
+  CHSV* color;
+  const int redPin;
+  const int greenPin;
+  const int bluePin;
+
+public:
+  PwdRGB(const int redPin, const int greenPin, const int bluePin) : redPin(redPin), greenPin(greenPin), bluePin(bluePin) {
+    //color = new CHSV(50,50,50);
+    pinMode(redPin, OUTPUT);
+    pinMode(greenPin, OUTPUT);
+    pinMode(bluePin, OUTPUT);
+  }
+
+  void setColor(const uint8_t h, const uint8_t s, const uint8_t v) {
+    this->color->setHSV(h,s,v);
+    show();
+  }
+
+  void on() {
+    show();
+  }
+
+  void off() {
+    show(0);
+  }
+
+  boolean isActive() { return (analogRead(redPin) > 0 && analogRead(bluePin) > 0 && analogRead(greenPin) > 0) ? true : false  ; }
+
+  String getHSV() { return String(this->color->h) + "," + String(this->color->s) + "," + (this->isActive() ? String(this->color->v) : String(0)); }
+
+protected:
+  void show(uint8_t v) {
+    CRGB* rgb = new CRGB();
+    rgb->setHSV(this->color->h, this->color->s, v);
+    logger.info("show|hsv ->"+String(this->color->h) + "," + String(this->color->s) + "," + String(v));
+    logger.info("show|rgb ->"+String(rgb->r) + "," + String(rgb->g) + "," + String(rgb->b));
+    analogWrite(redPin, rgb->r);
+    analogWrite(greenPin, rgb->g);
+    analogWrite(bluePin, rgb->b);
+  }
+  void show() {
+    show(this->color->v);
+  }
+};
+
+#endif

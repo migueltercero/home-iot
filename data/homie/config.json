@@ -1,0 +1,29 @@
+{
+     "name": "test",
+     "wifi": {
+          "ssid": "cofrades",
+          "password": "pelusos7"
+     },
+     "mqtt": {
+          "host": "192.168.43.245",
+          "port": 1883
+     },
+     "ota": {
+          "enabled": true
+     },
+     "settings": {
+          "controllerCount": 2,
+          "controller0": "led,0,12,13,14",
+          "controller1": "rollershutter,4,5,12,13,10",
+          "1": {
+               "type": "led",
+               "pin": [
+                    0,
+                    12,
+                    13,
+                    14
+               ]
+
+          }
+     }
+}

@@ -3,8 +3,9 @@
 
 #include "Node.cpp"
 #include "LightNode.cpp"
+//#include "LEDNode.cpp"
 #include "RollershutterNode.cpp"
-#include "NTPNode.cpp"
+#include "TimeNode.cpp"
 #include "RebootNode.cpp"
 
 using namespace std;
@@ -21,6 +22,10 @@ public:
         return new LightNode(id, atoi(cfg[1].c_str()),
                                    atoi(cfg[2].c_str()));
       }
+      //if (node.compare("led") == 0) {
+      //  return new LEDNode(id, atoi(cfg[1].c_str()),
+      //                             atoi(cfg[2].c_str()),atoi(cfg[3].c_str()),atoi(cfg[4].c_str()));
+      //}
       // if(controller.compare("light-timer") == 0){
       // return new LightTimerController(id, atoi(cfg[1].c_str()),
       // atoi(cfg[2].c_str()), atoi(cfg[3].c_str())); return;

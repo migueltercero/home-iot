@@ -18,11 +18,17 @@ public:
 
 protected:
   Logger<T> log;
-  void setup() { timer = new TimedAction(1 * 60 * 1000, bind(&Node::onReadyToOperate, this)); }
-  void loop() { timer->check(); }
 
-  bool handleInput(const HomieRange& range, const String& property, const String& value) {
+  void setup() { // timer = new TimedAction(1 * 60 * 1000, bind(&Node::onReadyToOperate, this));
+  }
+  
+  void loop() {
+    // timer->check();
+  }
+
+  virtual bool handleInput(const HomieRange& range, const String& property, const String& value) {
     log.info("mqtt ---- [" + value + "] ----> device");
+    return false;
   }
 
   void send(const String& property, String value) {

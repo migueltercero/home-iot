@@ -21,18 +21,17 @@ private:
 
 public:
   LightNode(const int id, const int buttonPin, const int lightPin)
-      : Node("light", "Light Node", "Switch"), buttonPin(buttonPin), lightPin(lightPin) {}
+      : Node("light", "Light Node", "Switch"), buttonPin(buttonPin), lightPin(lightPin) {
+        light = new Light(lightPin);
+    button = new OneButton(buttonPin, true);
+      }
 
 protected:
   void setup() {
     Node::setup();
 
-    this->advertise(power).setName("Power ON/OFF").setDatatype("boolean").settable();
-
-    light = new Light(lightPin);
-    button = new OneButton(buttonPin, true);
-
     button->attachClick(bind(&LightNode::buttonClickCallback, this));
+    this->advertise(power).setName("Power ON/OFF").setDatatype("boolean").settable();  
   }
 
   void loop() {
@@ -41,6 +40,7 @@ protected:
   }
 
   void onReadyToOperate() {
+    Node::onReadyToOperate();
     String status = light->isActive() ? "true" : "false";
     this->send(power, status);
   }

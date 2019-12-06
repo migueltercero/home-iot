@@ -1,0 +1,82 @@
+#ifndef RGBNode_H
+#define RGBNode_H
+
+#include "Controller/PwdRGB.cpp"
+#include "Log/Logger.cpp"
+#include "Node.cpp"
+#include "OneButton.h"
+
+using namespace std;
+using namespace std::placeholders;
+
+class LEDNode : public Node<LEDNode> {
+private:
+  PwdRGB* led;
+  OneButton* button;
+
+  const char* hsv = "hsv";
+
+public:
+  LEDNode(const int id, const int buttonPin, const int redPin, const int greenPin, const int bluePin) : Node("led", "LED Node", "Color") {
+    led = new PwdRGB(redPin, greenPin, bluePin);
+    button = new OneButton(buttonPin, true);
+  }
+
+protected:
+  void setup() {
+    Node::setup();
+
+    button->attachClick(bind(&LEDNode::buttonClickCallback, this));
+    this->advertise(hsv).setName("HSV Color").setDatatype("color").settable();
+  }
+
+  void loop() {
+    Node::loop();
+    button->tick();
+  }
+
+  void onReadyToOperate() {
+    Node::onReadyToOperate();
+    this->send(hsv, led->getHSV());
+  }
+
+  bool handleInput(const HomieRange& range, const String& property, const String& value) {
+    Node::handleInput(range, property, value);
+
+    if (property == hsv) {
+      int ind1 = value.indexOf(',');
+      uint8_t h = value.substring(0, ind1).toInt();
+      int ind2 = value.indexOf(',', ind1 + 1);
+      uint8_t s = value.substring(ind1 + 1, ind2 + 1).toInt();
+      uint8_t v = value.substring(ind2 + 1, value.length()).toInt();
+
+      led->setColor(h, s, v);
+      onReadyToOperate();
+      
+      return true;
+    }
+    return false;
+  }
+
+  void buttonClickCallback() {
+    log.info("click");
+    if (led->isActive()) {
+      off();
+    } else {
+      on();
+    }
+  }
+
+  void off() {
+    led->off();
+    log.info("off");
+    onReadyToOperate();
+  }
+
+  void on() {
+    led->on();
+    log.info("on");
+    onReadyToOperate();
+  }
+};
+#endif

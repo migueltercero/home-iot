@@ -1,0 +1,58 @@
+#ifndef PwdRGB_H
+#define PwdRGB_H
+
+#include <Log/Logger.cpp>
+#include <Arduino.h>
+#include <FastLED.h>
+
+#define LED_COUNT 60
+#define CHIPSET WS2812B
+#define LED_PIN 2
+
+class WS2812b {
+private:
+  Logger<WS2812b> logger;
+  CHSV* color;
+  CRGB _leds[LED_COUNT];
+  
+  const int ledCount;
+  const uint8_t ledPin;
+
+public:
+  WS2812b(const int ledCount, const uint8_t ledPin) : ledCount(ledCount), ledPin(ledPin) {
+    color = new CHSV(50,50,50);
+    FastLED.addLeds<CHIPSET, ledPin>(_leds, LED_COUNT);
+    FastLED.clear();
+  }
+
+  void setColor(const uint8_t h, const uint8_t s, const uint8_t v) {
+    color->setHSV(h,s,v);
+    show();
+  }
+
+  void on() {
+    show();
+  }
+
+  void off() {
+    show(0);
+  }
+
+  boolean isActive() { return true; }
+
+  String getHSV() { return String(this->color->h) + "," + String(this->color->s) + "," + (this->isActive() ? String(this->color->v) : String(0)); }
+
+protected:
+  void show(uint8_t v) {
+    CRGB* rgb = new CRGB();
+    rgb->setHSV(this->color->h, this->color->s, v);
+    logger.info("show|hsv ->"+String(this->color->h) + "," + String(this->color->s) + "," + String(v));
+    logger.info("show|rgb ->"+String(rgb->r) + "," + String(rgb->g) + "," + String(rgb->b));
+
+  }
+  void show() {
+    show(this->color->v);
+  }
+};
+
+#endif

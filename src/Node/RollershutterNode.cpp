@@ -72,6 +72,7 @@ protected:
   }
 
   void onReadyToOperate() {
+    Node::onReadyToOperate();
     String status = String(shutter->getCurrentLevel());
     this->send(level, status);
   }
@@ -80,13 +81,16 @@ protected:
     Node::handleInput(range, property, value);
 
     if (property == level) {
-      int level = value.toInt();
-      if (level == 255) {
+      if (level == "STOP") {
         shutter->stop();
       } else {
+        int level = value.toInt();
         shutter->setLevel(level);
       }
+      return true;
     }
+    
+    return false;
   }
 
   void output(uint8_t up, uint8_t down) {
