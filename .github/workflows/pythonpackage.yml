@@ -5,9 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - run: |
-          git fetch --tags
-          git branch --create-reflog master origin/master
+    #- run: |
+    #      git fetch --tags
+    #      git branch --create-reflog master origin/master
     - uses: gittools/actions/setup-gitversion@v0.3
       with:
           versionSpec: '5.1.x'
