@@ -31,17 +31,17 @@ jobs:
         echo "version: ${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}"
         cd .pio/build/esp8266
         mv firmware.elf firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
-    - name: release
+    - name: prerelease
       id: create_release
       uses: actions/create-release@v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.gitversion.outputs.semVer }}
-        release_name: ${{ steps.gitversion.outputs.semVer }}
+        release_name: v${{ steps.gitversion.outputs.semVer }}
         draft: true
         prerelease: true
-    - name: upload-asset
+    - name: prerelease-upload-asset
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
