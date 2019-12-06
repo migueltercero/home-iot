@@ -36,7 +36,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.gitversion.outputs.preReleaseNumber }} 
+        upload_url: https://uploads.github.com/repos/migueltercero/home-iot/releases/${{ steps.gitversion.outputs.preReleaseNumber }}/assets{?name,label}
         asset_path: .pio/build/esp8266/firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
         asset_name: firmware
         asset_content_type: application/elf
