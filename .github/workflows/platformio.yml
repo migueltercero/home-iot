@@ -10,21 +10,23 @@ jobs:
       uses: gittools/actions/setup-gitversion@v0.3
       with:
           versionSpec: '5.1.x'
-    - name: gitversion-execute
-      uses: gittools/actions/execute-gitversion@v0.3
-      id: gitversion
-    - name: platformio-setup
+    - name: python-setup
       uses: actions/setup-python@v1
       with:
           python-version: '3.8'
           architecture: 'x64'
-    - name: install platformio
+    - name: platformio-setup
       run: |
         python -m pip install --upgrade pip
         pip install -U platformio==4.1.0
         platformio update
+    - name: gitversion-execute
+      uses: gittools/actions/execute-gitversion@v0.3
+      id: gitversion
     - name: platformio-build
       run: |
         platformio run
     - run: |
         echo "version: ${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}"
+        cd .pio\build\esp8266
+        mv firmware.elf firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
