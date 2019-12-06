@@ -1,0 +1,26 @@
+name: platformio
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: gittools/actions/setup-gitversion@v0.3
+      with:
+          versionSpec: '5.1.x'
+    - uses: gittools/actions/execute-gitversion@v0.3
+      id: gitversion
+    #- uses: actions/setup-python@v1
+    #  with:
+    #      python-version: '3.8'
+    #      architecture: 'x64'
+    #- name: install platformio
+    #  run: |
+    #    python -m pip install --upgrade pip
+    #    pip install -U platformio==4.1.0
+    #    platformio update
+    #- name: build
+    #  run: |
+    #    platformio run
+    - run: |
+        echo "version: ${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}"
