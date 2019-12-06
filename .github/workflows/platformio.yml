@@ -28,5 +28,5 @@ jobs:
         platformio run
     - run: |
         echo "version: ${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}"
-        cd .pio\build\esp8266
+        cd .pio/build/esp8266
         mv firmware.elf firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
