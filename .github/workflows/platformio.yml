@@ -32,10 +32,10 @@ jobs:
         cd .pio/build/esp8266
         mv firmware.elf firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
     - name: upload-asset
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
           upload_url: ${{ steps.gitversion.outputs.preReleaseNumber }} 
           asset_path: .pio/build/esp8266/firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
           asset_name: firmware
