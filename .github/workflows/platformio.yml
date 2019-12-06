@@ -36,7 +36,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-          upload_url: ${{ steps.gitversion.outputs.preReleaseNumber }} 
-          asset_path: .pio/build/esp8266/firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
-          asset_name: firmware
-          asset_content_type: application/elf
+        upload_url: ${{ steps.gitversion.outputs.preReleaseNumber }} 
+        asset_path: .pio/build/esp8266/firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
+        asset_name: firmware
+        asset_content_type: application/elf
