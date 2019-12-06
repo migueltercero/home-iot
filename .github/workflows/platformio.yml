@@ -38,7 +38,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         tag_name: ${{ steps.gitversion.outputs.semVer }}
-        release_name: v${{ steps.gitversion.outputs.semVer }}
+        release_name: ${{ steps.gitversion.outputs.semVer }}
         draft: true
         prerelease: true
     - name: upload-asset
