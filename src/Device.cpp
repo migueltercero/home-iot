@@ -1,8 +1,9 @@
-#include "Node/NodeFactory.cpp"
+#include <ArduinoJson.h>
 #include <Homie.h>
+#include "Node/NodeFactory.cpp"
 
 #define FW_NAME "home-iot"
-#define FW_VERSION "2.0.0"
+#define FW_VERSION "3.0.0"
 
 #define GPIO_LED 16
 
@@ -14,31 +15,28 @@ const char* __FLAGGED_FW_VERSION = "\x6a\x3f\x3e\x0e\xe1" FW_VERSION "\xb0\x30\x
 std::vector<HomieNode*> nodes;
 NodeFactory* factory = new NodeFactory;
 
-HomieNode* ntpNode = new NTPNode();
+//TimeNode* timeNode = new TimeNode();
 HomieNode* rebootNode = new RebootNode();
 
 HomieSetting<long> controllerCount("controllerCount", "Number of Nodes");
 HomieSetting<const char*> controller0("controller0", "rollershutter,4,5,12,13,24");
 HomieSetting<const char*> controller1("controller1", "light,4,12");
-HomieSetting<const char*> controller2("controller2", "node");
+HomieSetting<const char*> controller2("controller2", "led,4,12,13,14");
 HomieSetting<const char*> controller3("controller3", "node");
 
 void setupHandler() {
   SPIFFS.begin();
   if (SPIFFS.exists("/homie/config.json")) {
-    File configFile = SPIFFS.open("/homie/config.json", "r");
-    char buf[1000];
-    size_t configSize = configFile.size();
-    configFile.readBytes(buf, configSize);
-    configFile.close();
-    buf[configSize] = '\0';
-
-    StaticJsonBuffer<1000> jsonBuffer;
-    JsonObject& parsedJson = jsonBuffer.parseObject(buf);
-
-    for (int i = 0; i < atoi(parsedJson["settings"]["controllerCount"]); i++) {
+    File file = SPIFFS.open("/homie/config.json", "r");
+    StaticJsonDocument<1000> document;
+    DeserializationError error = deserializeJson(document, file);
+    if (error) {
+      Serial.println(F("Failed to read file, using default configuration"));
+    }
+    
+    for (int i = 0; i < atoi(document["settings"]["controllerCount"]); i++) {
       String conf = String("controller" + String(i));
-      nodes.push_back(factory->createNode(i + 1, parsedJson["settings"][conf.c_str()]));
+      nodes.push_back(factory->createNode(i + 1, document["settings"][conf.c_str()]));
     }
   }
 }
