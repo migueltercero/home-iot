@@ -31,7 +31,7 @@ jobs:
     - id: version
       name: version
       run: |
-        echo ::set-output version=${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
+        echo ::set-output name={version}::${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
 
     - name: platformio build
       run: |
