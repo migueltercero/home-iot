@@ -44,7 +44,7 @@ jobs:
 
     - name: '[postbuild] apply version'
       run: |
-        mv .pio/build/esp8266/firmware.elf firmware-${{ steps.version.outputs.version }}.elf
+        mv .pio/build/esp8266/firmware.elf firmware-${{ steps.version.outputs.version }}.bin
     
     - id: draft
       name: '[release] create draft'
@@ -64,6 +64,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.draft.outputs.upload_url }}
-        asset_path: firmware-${{ steps.version.outputs.version }}.elf
-        asset_name: firmware-${{ steps.version.outputs.version }}.elf
-        asset_content_type: application/elf
+        asset_path: firmware-${{ steps.version.outputs.version }}.bin
+        asset_name: firmware-${{ steps.version.outputs.version }}.bin
+        asset_content_type: application/binary
