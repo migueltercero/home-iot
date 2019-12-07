@@ -44,7 +44,7 @@ jobs:
 
     - name: '[postbuild] apply version'
       run: |
-        mv .pio/build/esp8266/firmware.elf firmware-${{ steps.version.outputs.version }}.bin
+        mv .pio/build/esp8266/firmware.bin firmware-${{ steps.version.outputs.version }}.bin
     
     - id: draft
       name: '[release] create draft'
