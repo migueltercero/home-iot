@@ -4,49 +4,50 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout
+    - name: '[checkout]'
       uses: actions/checkout@v1
     
-    - name: gitversion setup
+    - name: '[setup] gitversion'
       uses: gittools/actions/setup-gitversion@v0.3
       with:
           versionSpec: '5.1.x'
     
-    - name: python setup
+    - name: '[setup] python'
       uses: actions/setup-python@v1
       with:
           python-version: '3.8'
           architecture: 'x64'
     
-    - name: platformio setup
+    - name: '[setup] platformio'
       run: |
         python -m pip install --upgrade pip
         pip install -U platformio==4.1.0
         platformio update
     
     - id: gitversion
-      name: gitversion execute
+      name: '[prebuild] execute gitversion'
       uses: gittools/actions/execute-gitversion@v0.3
     
     - id: version
-      name: version
+      name: '[prebuild] calculate version'
       run: |
         echo ::set-output name=version::${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
 
-    - name: version apply prebuild
+    - name: '[prebuild] apply version'
       run: |
-        sed -i 's/0.0.0/${{ steps.version.outputs.version }}/g' ./src/Device.cpp
+        #sed -i 's/0.0.0/${{ steps.version.outputs.version }}/g' ./src/Device.cpp
+        sed -i 's/0.0.0/${{ steps.gitversion.outputs.semVer }}/g' ./src/Device.cpp
     
-    - name: platformio build
+    - name: '[build] build firmware'
       run: |
         platformio run
 
-    - name: version apply postbuild
+    - name: '[postbuild] apply version'
       run: |
         mv .pio/build/esp8266/firmware.elf firmware-${{ steps.version.outputs.version }}.elf
     
     - id: draft
-      name: draft
+      name: '[release] create draft'
       uses: actions/create-release@v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,8 +58,7 @@ jobs:
         prerelease: true
         body: |
 
-    
-    - name: draft upload asset
+    - name: '[release] upload firmware'
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
