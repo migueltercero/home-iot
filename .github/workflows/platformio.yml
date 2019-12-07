@@ -7,7 +7,7 @@ jobs:
     - name: checkout
       uses: actions/checkout@v1
     
-    - name: gitversion-setup
+    - name: gitversion setup
       uses: gittools/actions/setup-gitversion@v0.3
       with:
           versionSpec: '5.1.x'
@@ -35,11 +35,11 @@ jobs:
     - id: version
       name: gitversion apply
       run: |
-        set version=${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
-        echo "::set-output version=$version"
+        version=${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
+        echo ::set-output version=${version}
         sed -i 's/0.0.0/${version}/g' src/Device.cpp
         cd .pio/build/esp8266
-        mv firmware.elf firmware-$version.elf
+        mv firmware.elf firmware-${version}.elf
     
     - id: draft
       name: draft
