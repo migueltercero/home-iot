@@ -31,7 +31,7 @@ jobs:
     - id: version
       name: version
       run: |
-        echo ::set-output name={version}::${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
+        echo ::set-output name=version::${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
 
     - name: platformio build
       run: |
@@ -63,5 +63,5 @@ jobs:
       with:
         upload_url: ${{ steps.draft.outputs.upload_url }}
         asset_path: .pio/build/esp8266/firmware-${{ steps.version.outputs.version }}.elf
-        asset_name: firmware-{{ steps.version.outputs.version }}.elf
+        asset_name: firmware-${{ steps.version.outputs.version }}.elf
         asset_content_type: application/elf
