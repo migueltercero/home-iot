@@ -28,18 +28,20 @@ jobs:
       name: gitversion execute
       uses: gittools/actions/execute-gitversion@v0.3
     
+    - id: version
+      name: version
+      run: |
+        echo ::set-output version=${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
+
     - name: platformio build
       run: |
         platformio run
-    
-    - id: version
-      name: gitversion apply
+
+    - name: version apply
       run: |
-        version=${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
-        echo ::set-output version=${version}
-        sed -i 's/0.0.0/${version}/g' src/Device.cpp
+        sed -i 's/0.0.0/${{ steps.version.outputs.version }}/g' src/Device.cpp
         cd .pio/build/esp8266
-        mv firmware.elf firmware-${version}.elf
+        mv firmware.elf firmware-${{ steps.version.outputs.version }}.elf
     
     - id: draft
       name: draft
@@ -51,6 +53,8 @@ jobs:
         release_name: v${{ steps.gitversion.outputs.semVer }}
         draft: true
         prerelease: true
+        body: |
+
     
     - name: draft upload asset
       uses: actions/upload-release-asset@v1.0.1
