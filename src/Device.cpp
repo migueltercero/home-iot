@@ -3,7 +3,7 @@
 #include "Node/NodeFactory.cpp"
 
 #define FW_NAME "home-iot"
-#define FW_VERSION "3.0.0"
+#define FW_VERSION "0.0.0"
 
 #define GPIO_LED 16
 

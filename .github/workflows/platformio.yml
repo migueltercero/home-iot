@@ -6,33 +6,42 @@ jobs:
     steps:
     - name: checkout
       uses: actions/checkout@v1
+    
     - name: gitversion-setup
       uses: gittools/actions/setup-gitversion@v0.3
       with:
           versionSpec: '5.1.x'
-    - name: python-setup
+    
+    - name: python setup
       uses: actions/setup-python@v1
       with:
           python-version: '3.8'
           architecture: 'x64'
-    - name: platformio-setup
+    
+    - name: platformio setup
       run: |
         python -m pip install --upgrade pip
         pip install -U platformio==4.1.0
         platformio update
-    - name: gitversion-execute
+    
+    - id: gitversion
+      name: gitversion execute
       uses: gittools/actions/execute-gitversion@v0.3
-      id: gitversion
     - name: platformio-build
       run: |
         platformio run
-    - name: gitversion-apply
+    
+    - id: version
+      name: gitversion apply
       run: |
-        echo "version: ${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}"
+        set version=${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
+        echo "::set-output version=${version}"
+        sed -i 's/0.0.0/${version}/g' src/Device.cpp
         cd .pio/build/esp8266
-        mv firmware.elf firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
-    - name: prerelease
-      id: create_release
+        mv firmware.elf firmware-${version}.elf
+    
+    - id: draft
+      name: draft
       uses: actions/create-release@v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,12 +50,13 @@ jobs:
         release_name: v${{ steps.gitversion.outputs.semVer }}
         draft: true
         prerelease: true
-    - name: prerelease-upload-asset
+    
+    - name: draft upload asset
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: .pio/build/esp8266/firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
-        asset_name: firmware-${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}.elf
+        upload_url: ${{ steps.draft.outputs.upload_url }}
+        asset_path: .pio/build/esp8266/firmware-${{ steps.version.outputs.version }}.elf
+        asset_name: firmware-{{ steps.version.outputs.version }}.elf
         asset_content_type: application/elf
