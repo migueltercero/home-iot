@@ -33,15 +33,17 @@ jobs:
       run: |
         echo ::set-output name=version::${{ steps.gitversion.outputs.semVer }}-${{ steps.gitversion.outputs.shortSha }}
 
+    - name: version apply prebuild
+      run: |
+        sed -i 's/0.0.0/${{ steps.version.outputs.version }}/g' ./src/Device.cpp
+    
     - name: platformio build
       run: |
         platformio run
 
-    - name: version apply
+    - name: version apply postbuild
       run: |
-        sed -i 's/0.0.0/${{ steps.version.outputs.version }}/g' src/Device.cpp
-        cd .pio/build/esp8266
-        mv firmware.elf firmware-${{ steps.version.outputs.version }}.elf
+        mv .pio/build/esp8266/firmware.elf firmware-${{ steps.version.outputs.version }}.elf
     
     - id: draft
       name: draft
@@ -62,6 +64,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.draft.outputs.upload_url }}
-        asset_path: .pio/build/esp8266/firmware-${{ steps.version.outputs.version }}.elf
+        asset_path: firmware-${{ steps.version.outputs.version }}.elf
         asset_name: firmware-${{ steps.version.outputs.version }}.elf
         asset_content_type: application/elf
