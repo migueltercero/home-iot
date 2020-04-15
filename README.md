@@ -1,5 +1,5 @@
 # HOME IOT
-Device controller for ESP8266 using  [Homie framework](http://example.com). 
+Device controller for ESP8266 using  [Homie framework](https://homieiot.github.io/homie-esp8266/docs/3.0.0/). 
 
 Tested in electrodragon boards:
 
